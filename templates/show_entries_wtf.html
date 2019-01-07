@@ -1,0 +1,24 @@
+<html lang="en">
+<head>
+    <title>Entries</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <form action="{{url_for('add_entry')}}" method="post">
+        {{ form.hidden_tag() }} <!-- prevent CSRF -->
+        {{ form.title.label }} {{ form.title() }} <br>
+        {{ form.text.label }} {{ form.text() }} <br>
+        <input type="submit" value="Send">
+    </form>
+
+    {% for entry in entries|sort(attribute='title') %}
+    <h3>{{entry.title}}</h3>
+    <div>
+        {{entry.text}}
+    </div>
+    <button onclick="window.location='/delete?id={{loop.index}}';">
+        Delete
+    </button>
+    {% endfor %}
+</body>
+</html>

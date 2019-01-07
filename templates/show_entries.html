@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+    <title>Entries</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+<form action="/add_entry" method="post">
+    <dl>
+        <dt>Title</dt>
+        <dd>
+            <input type="text" name="title">
+        </dd>
+        <dt>Text</dt>
+        <dd>
+            <textarea name="text" rows="10" cols="40"></textarea>
+        </dd>
+    </dl>
+    <input type="submit" value="Send">
+</form>
+
+{% for entry in entries|sort(attribute='title') %}
+<h3>{{entry.title}}</h3>
+<div>
+    {{entry.text}}
+</div>
+<button onclick="window.location='/delete?id={{entry.row_id}}';">
+    Delete
+</button>
+{% endfor %}
+</body>
+</html>

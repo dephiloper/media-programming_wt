@@ -1,0 +1,6 @@
+DROP TABLE blog.blog;
+
+CREATE TABLE blog.blog(
+  TITLE TEXT NOT NULL,
+  TEXT TEXT NOT NULL
+  );
