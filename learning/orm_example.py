@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 app = Flask(__name__, static_url_path='/static')  # static url only used in development
 
-engine = create_engine('sqlite:///blog.db')
+engine = create_engine('sqlite:///learning/blog.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 

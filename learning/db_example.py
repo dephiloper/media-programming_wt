@@ -6,7 +6,7 @@ app = Flask(__name__, static_url_path='/static')  # static url only used in deve
 
 def get_db():
     if not hasattr(g, 'sqlite_db'):
-        con = sqlite3.connect('blog.db')
+        con = sqlite3.connect('learning/blog.db')
         g.sqlite_db = con
 
     return g.sqlite_db
