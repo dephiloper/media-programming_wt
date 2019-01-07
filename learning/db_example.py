@@ -36,17 +36,17 @@ def show_entries():
     with con:
         cur = con.cursor()
         cur.execute('select rowid, * from blog')
-        entries = [dict(row_id=row[0], title=row[1], text=row[2]) for row in cur.fetchall()]
+        entries = [dict(rowid=row[0], title=row[1], text=row[2]) for row in cur.fetchall()]
 
     return render_template("show_entries.html", entries=entries)
 
 
 @app.route("/delete")
 def delete_entry():
-    row_id = request.args.get('id')
+    rowid = request.args.get('id')
     con = get_db()
     with con:
-        con.execute("delete from blog where rowid = ?", str(row_id))
+        con.execute("delete from blog where rowid = ?", str(rowid))
         con.commit()
     return redirect('/')
 
