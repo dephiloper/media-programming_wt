@@ -1,13 +1,8 @@
 import csv
+from sqlalchemy.orm import sessionmaker
+from entities import Party, Vote, Region, get_engine, VoteType
 
-from sqlalchemy import create_engine, Integer, Column, String, ForeignKey, Enum
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
-
-Base = declarative_base()
-
-engine = create_engine("sqlite:///btw.db")
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=get_engine())
 session = Session()
 
 states = []
@@ -15,43 +10,6 @@ cities = []
 federal_territory = None
 
 parties = []
-
-
-class VoteType(Enum):
-    FIRST = 0
-    SECOND = 1
-
-
-class Vote(Base):
-    __tablename__ = "vote"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    region_id = Column(Integer, ForeignKey("region.id"))
-    party_id = Column(Integer, ForeignKey("party.id"))
-    type = Column(Integer)
-    temporary_result = Column(Integer)
-    previous_period = Column(Integer)
-    region = relationship("Region", back_populates="votes")
-    party = relationship("Party", back_populates="votes")
-
-
-class Region(Base):
-    __tablename__ = "region"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String)
-    parent_id = Column(Integer, ForeignKey("region.id"))
-    parent_region = relationship("Region", uselist=False)
-    sub_regions: [] = relationship("Region", uselist=True)
-    votes: [] = relationship("Vote", uselist=True)
-
-
-class Party(Base):
-    __tablename__ = "party"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String)
-    votes: [] = relationship("Vote", uselist=True)
-
-
-Base.metadata.create_all(engine)
 
 with open('btw17_kerg.csv', 'r') as csv_file:
     for i in range(2): next(csv_file)  # ignore first two lines
@@ -66,7 +24,7 @@ with open('btw17_kerg.csv', 'r') as csv_file:
     for i in range(2): next(csv_file)  # ignore next two lines
 
     for row in reader:
-        if str(row[0]).__contains__(','): # when separator line go for the next
+        if str(row[0]).__contains__(','):  # when separator line go for the next
             break
 
         if len(row) > 2:
@@ -74,8 +32,9 @@ with open('btw17_kerg.csv', 'r') as csv_file:
 
             votes = []
             for i in range(0, len(votes_row), 2):
-                vote = Vote(type=(i / 2) % 2 == 0, temporary_result=votes_row[i], previous_period=votes_row[i + 1])
-                if vote.temporary_result != "" or vote.previous_period != "":
+                t = VoteType((i / 2) % 2) # first or second vote
+                vote = Vote(type=t, temporary_result=votes_row[i], previous_period=votes_row[i + 1])
+                if vote.temporary_result != "" or vote.previous_period != "": # when both empty do not store vote
                     vote.party = parties[int(i / 4)]
                     votes.append(vote)
 
