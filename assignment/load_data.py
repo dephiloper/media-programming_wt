@@ -5,14 +5,12 @@ from entities import Party, Vote, Region, get_engine, VoteType
 Session = sessionmaker(bind=get_engine())
 session = Session()
 
-states = []
-cities = []
 federal_territory = None
 
-parties = []
 
 with open('btw17_kerg.csv', 'r') as csv_file:
     for i in range(2): next(csv_file)  # ignore first two lines
+    parties = []
 
     reader = csv.reader(csv_file, delimiter=';')
 
@@ -22,6 +20,9 @@ with open('btw17_kerg.csv', 'r') as csv_file:
             parties.append(Party(name=header_row[i]))
 
     for i in range(2): next(csv_file)  # ignore next two lines
+
+    states = []
+    cities = []
 
     for row in reader:
         if str(row[0]).__contains__(','):  # when separator line go for the next

@@ -1,9 +1,8 @@
-# from enum import Enum
 import enum
 
 from sqlalchemy import Column, Integer, ForeignKey, String, create_engine, Enum
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
 engine = create_engine("sqlite:///btw.db")
@@ -31,8 +30,7 @@ class Region(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
     parent_id = Column(Integer, ForeignKey("region.id"))
-    parent_region = relationship("Region", uselist=False)
-    sub_regions: [] = relationship("Region", uselist=True)
+    sub_regions: [] = relationship("Region", backref=backref('parent_region', remote_side=[id]), uselist=True)
     votes: [] = relationship("Vote", uselist=True)
 
 
