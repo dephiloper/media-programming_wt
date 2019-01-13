@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+<div style="display: flex;" ng-app="app" ng-controller="main-controller">
+    {% raw %}
+    <div style="width: 400px;">
+        <h1>Bundesland</h1>
+        <ul>
+            <li ng-repeat="state in states">
+                <a href="#{{state.name}}" ng-click="show_constituencies(state)">{{state.name}}</a>
+            </li>
+        </ul>
+    </div>
+    <div style="flex: 1;" ng-show="constituencies_visible">
+        <h1>Wahlkreise</h1>
+        <ul>
+            <li ng-repeat="constituency in constituencies">
+                <a href="#{{constituency.name}}" ng-click="show_votes(constituency)">{{constituency.name}}</a>
+            </li>
+        </ul>
+    </div>
+    {% endraw %}
+</div>
+<script type="text/javascript" src="{{url_for('static', filename='js/angular.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/app.js')}}"></script>
+<link type="text/css" href="{{ url_for('static', filename='stylesheets/style.css') }}" />
+</body>
+</html>

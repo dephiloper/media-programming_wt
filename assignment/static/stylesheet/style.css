@@ -1,0 +1,11 @@
+#parent {
+    display: flex;
+}
+#narrow {
+    width: 200px;
+    background: lightblue;
+}
+#wide {
+    flex: 1;
+    background: lightgreen;
+}

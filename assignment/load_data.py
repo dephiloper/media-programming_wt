@@ -22,7 +22,7 @@ with open('btw17_kerg.csv', 'r') as csv_file:
     for i in range(2): next(csv_file)  # ignore next two lines
 
     states = []
-    cities = []
+    constituencies = []
 
     for row in reader:
         if str(row[0]).__contains__(','):  # when separator line go for the next
@@ -48,11 +48,11 @@ with open('btw17_kerg.csv', 'r') as csv_file:
                 states.clear()
             elif int(row[2]) == 99:  # state
                 state = region
-                state.sub_regions = cities
-                cities.clear()
+                state.sub_regions = constituencies
+                constituencies.clear()
                 states.append(state)
-            else:  # city
-                cities.append(region)
+            else:  # constituencies
+                constituencies.append(region)
 
 session.add(federal_territory)
 session.commit()
