@@ -1,6 +1,6 @@
 import csv
 from sqlalchemy.orm import sessionmaker
-from entities import Party, Vote, Region, get_engine, VoteType
+from entities import Party, Vote, Region, get_engine
 
 Session = sessionmaker(bind=get_engine())
 session = Session()
@@ -32,10 +32,12 @@ with open('btw17_kerg.csv', 'r') as csv_file:
             votes_row = row[3:-1]
 
             votes = []
-            for i in range(0, len(votes_row), 2):
-                t = VoteType((i / 2) % 2) # first or second vote
-                vote = Vote(type=t, temporary_result=votes_row[i], previous_period=votes_row[i + 1])
-                if vote.temporary_result != "" or vote.previous_period != "": # when both empty do not store vote
+            for i in range(0, len(votes_row), 4):
+                vote = Vote(temporary_result=int(votes_row[i] or 0), previous_period=int(votes_row[i + 1] or 0),
+                            second_temporary_result=int(votes_row[i+2] or 0), second_previous_period=int(votes_row[i + 3] or 0))
+                # when both empty do not store vote
+                if vote.temporary_result != 0 or vote.previous_period != 0 or \
+                        vote.second_temporary_result != 0 or vote.second_previous_period != 0:
                     vote.party = parties[int(i / 4)]
                     votes.append(vote)
 

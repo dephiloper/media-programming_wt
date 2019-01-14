@@ -1,5 +1,6 @@
-from flask import render_template, Flask, jsonify, request
+from flask import render_template, Flask, jsonify
 from sqlalchemy.orm import sessionmaker
+
 from entities import get_engine, Region
 
 Session = sessionmaker(bind=get_engine())
@@ -20,10 +21,18 @@ def show_states():
     return jsonify(sub_regions=[i.to_json() for i in main_region.sub_regions])
 
 
-@app.route('/states/<state>/constituencies', methods=['GET'])
-def show_constituencies(state):
-    state = session.query(Region).filter(Region.name == state).first()
+@app.route('/states/<state_id>/constituencies/', methods=['GET'])
+def show_constituencies(state_id):
+    state = session.query(Region).filter(Region.id == state_id).first()
     return jsonify(constituencies=[i.to_json() for i in state.sub_regions])
+
+
+@app.route('/states/<state_id>/constituencies/<constituency_id>/votes/', methods=['GET'])
+def show_views(state_id, constituency_id):
+    constituency = session.query(Region).filter(Region.id == constituency_id).filter(
+        Region.parent_id == state_id).first()
+
+    return jsonify(votes=[i.to_json() for i in constituency.votes])
 
 
 app.run()

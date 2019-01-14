@@ -3,28 +3,75 @@
 <head>
 </head>
 <body>
-<div style="display: flex;" ng-app="app" ng-controller="main-controller">
+<div ng-app="app" ng-controller="main-controller" style="margin: 10px;">
     {% raw %}
-    <div style="width: 400px;">
-        <h1>Bundesland</h1>
-        <ul>
-            <li ng-repeat="state in states">
-                <a href="#{{state.name}}" ng-click="show_constituencies(state)">{{state.name}}</a>
-            </li>
-        </ul>
+    <div style="display: flex; margin-bottom: 20px;">
+        <div style="width: 300px; margin-right: 10px;">
+            <h1>Bundesland</h1>
+            <h3 style="color: transparent">placeholder</h3>
+            <ul class="list-group" ng-repeat="state in states">
+                <a class="list-group-item list-group-item-action" href="#{{state.name}}"
+                   ng-click="show_constituencies($event, state)">{{state.name}}</a>
+            </ul>
+        </div>
+        <div style="width: 400px; margin-right: 10px;" ng-show="constituencies_visible">
+            <h1>Wahlkreise</h1>
+            <h3>{{state.name}}</h3>
+            <input ng-model="search.name" class="form-control mr-sm-2" type="search" placeholder="Suche"
+                   aria-label="Search" style="margin-bottom: 10px;">
+            <ul class="list-group" ng-repeat="constituency in constituencies | filter:search:strict">
+                <a class="list-group-item list-group-item-action" href="#{{constituency.name}}"
+                   ng-click="show_votes($event, constituency)">{{constituency.name}}</a>
+            </ul>
+        </div>
+        <div style="flex: 1;" ng-show="votes_visible">
+            <h1>Ergebnis</h1>
+            <h3>{{constituency.name}}</h3>
+            <table class="table">
+                <th>Partei</th>
+                <th>Erststimme</th>
+                <th>Zweitstimme</th>
+                <tr ng-repeat="vote in votes">
+                    <td>{{ vote.party }}</td>
+                    <td>{{ vote.temporary_result / max_temp * 100 | number: '2'}}%</td>
+                    <td>{{ vote.second_temporary_result / second_max_temp * 100 | number: '2'}}%</td>
+                </tr>
+            </table>
+        </div>
     </div>
-    <div style="flex: 1;" ng-show="constituencies_visible">
-        <h1>Wahlkreise</h1>
-        <ul>
-            <li ng-repeat="constituency in constituencies">
-                <a href="#{{constituency.name}}" ng-click="show_votes(constituency)">{{constituency.name}}</a>
-            </li>
-        </ul>
+    <div ng-show="votes_visible" style="width: 70%; display: block; margin-left: auto; margin-right: auto;">
+        <div>
+            <h2>Vergleich Erst- und Zweitstimmen</h2>
+            <h3>{{constituency.name}}</h3>
+            <canvas id="votes-bar" class="chart chart-bar" chart-data="votes_data" chart-labels="votes_labels"
+                    chart-series="votes_series">
+            </canvas>
+        </div>
+        <div style="display: flex;">
+            <div style="flex: 1;">
+                <h2>Verteilung Erststimmen</h2>
+                <canvas id="first-votes-pie" class="chart chart-pie"
+                        chart-data="first_votes_data" chart-labels="first_votes_labels"
+                        chart-options="first_votes_options">
+                </canvas>
+            </div>
+            <div style="flex: 1;">
+                <h2>Verteilung Zweitstimmen</h2>
+                <canvas id="second-votes-pie" class="chart chart-pie"
+                        chart-data="second_votes_data" chart-labels="second_votes_labels"
+                        chart-options="second_votes_options">
+                </canvas>
+            </div>
+        </div>
     </div>
     {% endraw %}
 </div>
 <script type="text/javascript" src="{{url_for('static', filename='js/angular.min.js')}}"></script>
 <script type="text/javascript" src="{{url_for('static', filename='js/app.js')}}"></script>
-<link type="text/css" href="{{ url_for('static', filename='stylesheets/style.css') }}" />
+<link type="text/css" href="{{ url_for('static', filename='stylesheets/style.css') }}"/>
+<script type="text/javascript" src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/angular-chart.min.js') }}"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 </body>
 </html>
