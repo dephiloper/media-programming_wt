@@ -14,7 +14,7 @@
                    ng-click="show_constituencies($event, state)">{{state.name}}</a>
             </ul>
         </div>
-        <div style="width: 400px; margin-right: 10px;" ng-show="constituencies_visible">
+        <div style="width: 400px; margin-right: 50px;" ng-show="constituencies_visible">
             <h1>Wahlkreise</h1>
             <h3>{{state.name}}</h3>
             <input ng-model="search.name" class="form-control mr-sm-2" type="search" placeholder="Suche"
@@ -39,29 +39,29 @@
             </table>
         </div>
     </div>
-    <div ng-show="votes_visible" style="width: 70%; display: block; margin-left: auto; margin-right: auto;">
-        <div>
-            <h2>Vergleich Erst- und Zweitstimmen</h2>
-            <h3>{{constituency.name}}</h3>
-            <canvas id="votes-bar" class="chart chart-bar" chart-data="votes_data" chart-labels="votes_labels"
-                    chart-series="votes_series">
-            </canvas>
-        </div>
-        <div style="display: flex;">
+    <div class="card" ng-show="votes_visible" style="width: 70%; display: block; margin-left: auto; margin-right: auto;">
+        <h2 class="card-body">{{constituency.name}}</h2>
+        <div class="card-body" style="display: flex; margin-bottom: 10px;">
             <div style="flex: 1;">
-                <h2>Verteilung Erststimmen</h2>
+                <h3>Verteilung Erststimmen</h3>
                 <canvas id="first-votes-pie" class="chart chart-pie"
                         chart-data="first_votes_data" chart-labels="first_votes_labels"
                         chart-options="first_votes_options">
                 </canvas>
             </div>
             <div style="flex: 1;">
-                <h2>Verteilung Zweitstimmen</h2>
+                <h3>Verteilung Zweitstimmen</h3>
                 <canvas id="second-votes-pie" class="chart chart-pie"
                         chart-data="second_votes_data" chart-labels="second_votes_labels"
                         chart-options="second_votes_options">
                 </canvas>
             </div>
+        </div>
+        <div class="card-body">
+            <h2>Vergleich Erst- und Zweitstimmen</h2>
+            <canvas id="votes-bar" class="chart chart-bar" chart-data="votes_data" chart-labels="votes_labels"
+                    chart-series="votes_series">
+            </canvas>
         </div>
     </div>
     {% endraw %}

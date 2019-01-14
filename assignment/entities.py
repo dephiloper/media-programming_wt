@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
-engine = create_engine("sqlite:///assignment/btw.db", connect_args={'check_same_thread': False})
+engine = create_engine("sqlite:///btw.db", connect_args={'check_same_thread': False})
 
 
 class Vote(Base):

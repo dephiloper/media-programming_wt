@@ -31,8 +31,8 @@ def show_constituencies(state_id):
 def show_views(state_id, constituency_id):
     constituency = session.query(Region).filter(Region.id == constituency_id).filter(
         Region.parent_id == state_id).first()
-
     return jsonify(votes=[i.to_json() for i in constituency.votes])
 
 
-app.run()
+if __name__ == "__main__":
+    app.run()

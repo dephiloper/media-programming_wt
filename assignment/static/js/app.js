@@ -43,11 +43,8 @@ angular.module('app', ['chart.js'])
 
                     // charts
                     $scope.votes_data = [$scope.votes.map(v=>v.temporary_result), $scope.votes.map(v=>v.second_temporary_result)];
-                    $scope.votes_labels =$scope.votes.map(v=>v.party);
+                    $scope.votes_labels =$scope.votes.map(v=>v.party.substr(0, 10));
                     $scope.votes_series = ["Erststimmen", "Zweitstimmen"];
-
-                    $log.log($scope.votes_data);
-                    $log.log($scope.votes_labels);
 
                     $scope.first_votes_labels = $scope.votes.map(value => value.party);
                     $scope.first_votes_data = $scope.votes.map(value => parseInt(value.temporary_result));
